@@ -6,7 +6,7 @@ import torch
 from tqdm import tqdm
 import traceback
 import time
-import sys
+import os
 
 # ---------------------------------------------------------
 # 1. Load Qwen 7B model
@@ -55,7 +55,6 @@ Explanation:
     )
 
     decoded = tokenizer.decode(outputs[0], skip_special_tokens=True)
-
     if "Explanation:" in decoded:
         decoded = decoded.split("Explanation:", 1)[1].strip()
 
@@ -107,21 +106,50 @@ csqa = load_dataset("commonsense_qa")
 train_ds = csqa["train"]   # 9741 samples
 TOTAL = len(train_ds)
 
-output_file = open("csqa_full.jsonl", "w")
-csv_file = open("csqa_full.csv", "w", newline="")
+
+# ---------------------------------------------------------
+# 5. Detect how many samples already generated (resume point)
+# ---------------------------------------------------------
+jsonl_path = "csqa_full.jsonl"
+csv_path = "csqa_full.csv"
+
+if os.path.exists(jsonl_path):
+    with open(jsonl_path, "r") as f:
+        existing_lines = [line for line in f.readlines() if line.strip()]
+    START_INDEX = len(existing_lines)
+else:
+    START_INDEX = 0
+
+print(f"➡ Detected {START_INDEX} existing samples in {jsonl_path} (will start from index {START_INDEX})")
+
+# 这里假设你之前的 1~299 条已经写进 jsonl，那 START_INDEX = 299
+# 新一轮会从 train_ds[299]（第 300 个样本）继续
+
+
+# ---------------------------------------------------------
+# 6. Open files in append mode
+# ---------------------------------------------------------
+output_file = open(jsonl_path, "a", encoding="utf-8")
+csv_file = open(csv_path, "a", newline="", encoding="utf-8")
 csv_writer = csv.writer(csv_file)
-csv_writer.writerow(["question", "choices", "answer", "short_explanation"])
 
-error_log = open("error_log.txt", "w")
+# 如果是全新文件，需要写 header，这里只在文件不存在时写
+if START_INDEX == 0 and os.path.getsize(csv_path) == 0:
+    csv_writer.writerow(["question", "choices", "answer", "short_explanation"])
 
+error_log = open("error_log.txt", "a", encoding="utf-8")
 
-# ---------------------------------------------------------
-# 5. Full generation loop with progress, batching, OOM recovery
-# ---------------------------------------------------------
 BATCH_SIZE = 50
 flush_interval = 100
 
-for idx in tqdm(range(TOTAL), desc="Generating explanations"):
+
+# ---------------------------------------------------------
+# 7. Full generation loop (resume from START_INDEX)
+# ---------------------------------------------------------
+for idx in tqdm(range(START_INDEX, TOTAL),
+                desc="Generating explanations",
+                initial=START_INDEX,
+                total=TOTAL):
     try:
         ex = train_ds[idx]
         q = ex["question"]
@@ -162,14 +190,13 @@ for idx in tqdm(range(TOTAL), desc="Generating explanations"):
             csv_file.flush()
 
     except RuntimeError as e:
+        # 非 GPU 情况下这里基本不会触发，不过逻辑保留
         if "out of memory" in str(e).lower():
-            print("\n⚠ OOM Detected! Clearing cache and reloading model...")
-            torch.cuda.empty_cache() if torch.cuda.is_available() else None
-            time.sleep(2)
-            tokenizer, model = load_model()
+            print("\n⚠ OOM Detected! You may need to reduce batch size or restart.")
+            # 如果你以后改成 GPU，可以在这里加 torch.cuda.empty_cache()
+            error_log.write(f"OOM at index {idx}:\n{repr(e)}\n\n")
             continue
 
-        # Other errors log only
         error_log.write(f"Error at index {idx}:\n{traceback.format_exc()}\n\n")
         print(f"\n[Error at {idx}] logged to error_log.txt")
         continue
@@ -179,4 +206,4 @@ output_file.close()
 csv_file.close()
 error_log.close()
 
-print("\n🎉 DONE! Generated csqa_full.jsonl and csqa_full.csv successfully!")
+print("\n🎉 DONE (resume run)! csqa_full.jsonl and csqa_full.csv have been updated.")
