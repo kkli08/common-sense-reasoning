@@ -15,8 +15,6 @@ We use the **CoS-E (Common Sense Explanations)** dataset, which provides:
 
 We compare both models on the same 8 baseline CSQA questions.
 
----
-
 # 📊 **Accuracy Summary**
 
 | Model                          | Accuracy | Correct / Total |
@@ -34,10 +32,14 @@ Below, each question shows outputs from **both models**, allowing direct compari
 
 ---
 
-## ### **Question 1**
+## **Question 1**
 
 **Q:** Sammy wanted to go to where the people were. Where might he go?
+
+
 **Choices:** race track, populated areas, the desert, apartment, roadblock
+
+
 **Gold:** **B**
 
 | Model               | Output                                                                                                    |
@@ -47,10 +49,14 @@ Below, each question shows outputs from **both models**, allowing direct compari
 
 ---
 
-## ### **Question 2**
+## **Question 2**
 
 **Q:** Where do you store fresh vegetables?
+
+
 **Choices:** garage, refrigerator, bookshelf, bathroom, attic
+
+
 **Gold:** **B**
 
 | Model               | Output                                                                                          |
@@ -60,10 +66,14 @@ Below, each question shows outputs from **both models**, allowing direct compari
 
 ---
 
-## ### **Question 3**
+## **Question 3**
 
 **Q:** If you heat water to 100°C, what will happen?
+
+
 **Choices:** freeze, boil, rust, glow, evaporate
+
+
 **Gold:** **B**
 
 | Model               | Output                                                                                  |
@@ -73,10 +83,14 @@ Below, each question shows outputs from **both models**, allowing direct compari
 
 ---
 
-## ### **Question 4**
+## **Question 4**
 
 **Q:** What do people usually use to dry their hands after washing?
+
+
 **Choices:** towel, hammer, blanket, pillow, shoe
+
+
 **Gold:** **A**
 
 | Model               | Output                                                                                    |
@@ -86,10 +100,14 @@ Below, each question shows outputs from **both models**, allowing direct compari
 
 ---
 
-## ### **Question 5**
+## **Question 5**
 
 **Q:** Where would you typically find books to read?
+
+
 **Choices:** library, swimming pool, factory, garage, freeway
+
+
 **Gold:** **A**
 
 | Model               | Output                                                                                                                 |
@@ -99,10 +117,14 @@ Below, each question shows outputs from **both models**, allowing direct compari
 
 ---
 
-## ### **Question 6**
+## **Question 6**
 
 **Q:** If someone wants to relax and reduce stress, what might they do?
+
+
 **Choices:** meditate, argue, shout, work more, run into danger
+
+
 **Gold:** **A**
 
 | Model               | Output                                                                                                |
@@ -112,10 +134,14 @@ Below, each question shows outputs from **both models**, allowing direct compari
 
 ---
 
-## ### **Question 7**
+## **Question 7**
 
 **Q:** What tool is commonly used to tighten screws?
+
+
 **Choices:** screwdriver, spoon, pencil, comb, fork
+
+
 **Gold:** **A**
 
 | Model               | Output                                                                                            |
@@ -125,10 +151,14 @@ Below, each question shows outputs from **both models**, allowing direct compari
 
 ---
 
-## ### **Question 8**
+## **Question 8**
 
 **Q:** Where would you likely find many wild animals living together?
+
+
 **Choices:** forest, kitchen, bathroom, rooftop, office
+
+
 **Gold:** **A**
 
 | Model               | Output                                                                                                             |
