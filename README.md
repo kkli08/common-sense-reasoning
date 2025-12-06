@@ -118,7 +118,7 @@ EOF
 ## Usage Instruction
 ### Dataset preparation
 
-This project includes a data generation pipeline that creates **high-quality short reasoning explanations** for the CommonsenseQA dataset using a locally deployed large language model.
+This project includes a data generation pipeline that creates **high-quality short reasoning explanations** for the CommonsenseQA dataset using a locally deployed large language model. [Why not CoSE?](https://github.com/kkli08/common-sense-reasoning/wiki)
 
 The generation process uses a **two-stage reasoning approach**:
 1. Generate a correct long explanation for each question
